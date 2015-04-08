@@ -38,7 +38,8 @@ public class ContentManager
 
 	private ContentManager()
 	{
-		unsortedPath = ConSettingsManager.getValue("Allgemein", "MedienPfad-Unsortiert", "C:\\");
+		unsortedPath = ConSettingsManager.getValue("Allgemein", "MedienPfad-Unsortiert",
+				"C:\\Users\\Public\\Pictures");
 		sortedPath = ConSettingsManager.getValue("Allgemein", "MedienPfad-Sortiert", "C:\\");
 
 		user = new SimpleStringProperty("Sample Pictures");
