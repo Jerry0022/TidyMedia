@@ -1,24 +1,27 @@
 package application.gui;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.image.Image;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
+import application.basicfeatures.FileObject;
+import application.logic.ContentManager;
+import application.media.MediaHandler;
 
-public class ShowView extends BorderPane
+public class ShowView extends BorderPane implements ChangeListener<FileObject>
 {
-	private ObjectProperty<Image>	imageProperty;
 
 	public ShowView()
 	{
-		this.setStyle("-fx-background-color: black");
-		imageProperty = new SimpleObjectProperty<>();
-		// TODO Set not found image
+		this.setStyle("-fx-background-color: yellow");
+		ContentManager.getInstance().file.addListener(this);
 	}
 
-	private void readImage()
+	@Override
+	public void changed(ObservableValue<? extends FileObject> observable, FileObject oldValue,
+			FileObject newValue)
 	{
-		// TODO Set imageProperty
-		// TODO Handle Video and 3D icons
+		this.setTop(new Text(newValue.getFullName()));
+		this.setCenter(MediaHandler.getView(newValue));
 	}
 }
