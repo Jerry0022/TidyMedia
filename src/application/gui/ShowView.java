@@ -10,7 +10,6 @@ import application.media.MediaHandler;
 
 public class ShowView extends BorderPane implements ChangeListener<FileObject>
 {
-
 	public ShowView()
 	{
 		this.setStyle("-fx-background-color: yellow");

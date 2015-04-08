@@ -30,7 +30,7 @@ public class ContentManager
 	}
 
 	private String						unsortedPath;
-	private String						sortedPath;
+	public String						sortedPath;
 
 	public StringProperty				user;
 	public ObjectProperty<FileObject>	file;

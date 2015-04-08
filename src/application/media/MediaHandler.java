@@ -1,7 +1,7 @@
 package application.media;
 
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -10,15 +10,18 @@ import application.basicfeatures.ImageHandler;
 
 public class MediaHandler
 {
-	public static Node getView(FileObject object)
+	public static Pane getView(FileObject object)
 	{
+		Pane pane = new Pane();
 		ImageView imageView;
 		MediaView mediaView;
 
 		try
 		{
 			imageView = new ImageView(ImageHandler.readImage(object));
-			return imageView;
+			imageView.fitWidthProperty().bind(pane.widthProperty());
+			imageView.fitHeightProperty().bind(pane.heightProperty());
+			pane.getChildren().add(imageView);
 		}
 		catch (Exception ie)
 		{
@@ -26,7 +29,7 @@ public class MediaHandler
 			{
 				Media media = new Media(object.getFullPath());
 				mediaView = new MediaView(new MediaPlayer(media));
-				return mediaView;
+				pane.getChildren().add(mediaView);
 			}
 			catch (Exception me)
 			{
@@ -34,8 +37,9 @@ public class MediaHandler
 				// default image
 				// TODO Handle exception
 				imageView = new ImageView();
-				return imageView;
+				pane.getChildren().add(imageView);
 			}
 		}
+		return pane;
 	}
 }

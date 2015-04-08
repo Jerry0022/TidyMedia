@@ -1,11 +1,17 @@
 package application.gui;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import org.apache.commons.io.FileUtils;
+
+import application.basicfeatures.FileObject;
 import application.logic.ContentManager;
 
 public class InputView extends VBox
@@ -19,10 +25,25 @@ public class InputView extends VBox
 			@Override
 			public void handle(ActionEvent event)
 			{
-				// TODO new Task to do the following / while that block GUI
-				// TODO Rename file
-				// TODO Copy file by TeraCopy over command line with /RenameAll
-				// TODO After copying finished request next file
+				FileObject file = ContentManager.getInstance().file.get();
+
+				FileObject newFile = FileObject
+						.create()
+						.setPath(ContentManager.getInstance().sortedPath)
+						.setFullName(
+								file.getFullNameWithoutExtension() + "_111" + "."
+										+ file.getExtension());
+
+				try
+				{
+					FileUtils.moveFile(file.getFile(), newFile.getFile());
+				}
+				catch (IOException e)
+				{
+					// TODO Source or destination aren't valid or access rights
+					// are restricted
+					e.printStackTrace();
+				}
 				ContentManager.getInstance().nextFile();
 			}
 		});
