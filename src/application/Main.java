@@ -4,6 +4,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import application.gui.InputView;
+import application.gui.ShowView;
+import application.gui.TitleView;
 
 public class Main extends Application
 {
@@ -13,8 +16,13 @@ public class Main extends Application
 		try
 		{
 			BorderPane root = new BorderPane();
+			root.setLeft(new InputView());
+			root.setTop(new TitleView());
+			root.setCenter(new ShowView());
+
 			Scene scene = new Scene(root, 400, 400);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}
