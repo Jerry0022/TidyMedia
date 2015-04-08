@@ -1,12 +1,24 @@
 package application.media;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+
+import org.apache.commons.io.FileUtils;
+import org.controlsfx.control.InfoOverlay;
+
 import application.basicfeatures.FileObject;
 import application.basicfeatures.ImageHandler;
+
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 public class MediaHandler
 {
@@ -21,7 +33,22 @@ public class MediaHandler
 			imageView = new ImageView(ImageHandler.readImage(object));
 			imageView.fitWidthProperty().bind(pane.widthProperty());
 			imageView.fitHeightProperty().bind(pane.heightProperty());
-			pane.getChildren().add(imageView);
+
+			// Retrieve date from image
+			Metadata metadata = ImageMetadataReader.readMetadata(object.getFile());
+			ExifSubIFDDirectory directory = metadata
+					.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+			Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+			DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("de",
+					"DE"));
+
+			String text = "Weitere Infos\n" + "Dateigröße: " + FileUtils.sizeOf(object.getFile())
+					+ "\nErstellungsdatum: " + formatter.format(date);
+
+			InfoOverlay infoImage = new InfoOverlay(imageView, text);
+			infoImage.setShowOnHover(true);
+
+			pane.getChildren().add(infoImage);
 		}
 		catch (Exception ie)
 		{

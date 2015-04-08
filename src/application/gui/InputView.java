@@ -19,6 +19,8 @@ public class InputView extends VBox
 	public InputView()
 	{
 		TextField locationTextField = new TextField();
+		TextField personTextField = new TextField();
+
 		Button continueButton = new Button("Speichern und fortfahren");
 		continueButton.setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -27,11 +29,12 @@ public class InputView extends VBox
 			{
 				FileObject file = ContentManager.getInstance().file.get();
 
+				// Apply naming logic here!
 				FileObject newFile = FileObject
 						.create()
 						.setPath(ContentManager.getInstance().sortedPath)
 						.setFullName(
-								file.getFullNameWithoutExtension() + "_111" + "."
+								file.getFullNameWithoutExtension() + "_renamed" + "."
 										+ file.getExtension());
 
 				try
@@ -48,8 +51,7 @@ public class InputView extends VBox
 			}
 		});
 
-		this.getChildren().add(new Text("Ort"));
-		this.getChildren().add(locationTextField);
-		this.getChildren().add(continueButton);
+		this.getChildren().addAll(new Text("Ort"), locationTextField, new Text("Personen"),
+				personTextField, continueButton);
 	}
 }

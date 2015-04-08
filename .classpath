@@ -12,5 +12,8 @@
 	<classpathentry kind="lib" path="libs/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/commons-lang3-3.3.2.jar"/>
 	<classpathentry kind="lib" path="libs/commons-beanutils-1.9.2.jar"/>
+	<classpathentry kind="lib" path="libs/controlsfx-8.20.8.jar"/>
+	<classpathentry kind="lib" path="libs/metadata-extractor-2.8.0.jar"/>
+	<classpathentry kind="lib" path="libs/xmpcore-5.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
