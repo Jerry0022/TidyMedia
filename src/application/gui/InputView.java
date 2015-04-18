@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 
 import org.apache.commons.io.FileUtils;
 
+import application.Main;
 import application.basicfeatures.FileObject;
 import application.logic.ContentManager;
 
@@ -29,13 +30,13 @@ public class InputView extends VBox
 			{
 				FileObject file = ContentManager.getInstance().file.get();
 
-				// Apply naming logic here!
+				// TODO Apply naming logic here!
 				FileObject newFile = FileObject
 						.create()
 						.setPath(ContentManager.getInstance().sortedPath)
 						.setFullName(
-								file.getFullNameWithoutExtension() + "_renamed" + "."
-										+ file.getExtension());
+								file.getFullNameWithoutExtension() + "_renamed"
+										+ file.getFullExtension());
 
 				try
 				{
@@ -43,9 +44,8 @@ public class InputView extends VBox
 				}
 				catch (IOException e)
 				{
-					// TODO Source or destination aren't valid or access rights
-					// are restricted
-					e.printStackTrace();
+					Main.openDynamic(new Text(
+							"Source or destination aren't valid or access rights to the file are restricted!"));
 				}
 				ContentManager.getInstance().nextFile();
 			}

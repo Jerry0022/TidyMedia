@@ -3,7 +3,6 @@ package application.gui;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import application.basicfeatures.FileObject;
 import application.logic.ContentManager;
@@ -22,7 +21,6 @@ public class ShowView extends BorderPane implements ChangeListener<FileObject>
 			FileObject newValue)
 	{
 		this.setTop(new Text(newValue.getFullName()));
-		Pane pane = MediaHandler.getView(newValue);
-		this.setCenter(pane);
+		this.setCenter(MediaHandler.getView(newValue));
 	}
 }

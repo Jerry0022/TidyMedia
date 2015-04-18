@@ -42,7 +42,9 @@ public class MediaHandler
 			DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("de",
 					"DE"));
 
-			String text = "Weitere Infos\n" + "Dateigröße: " + FileUtils.sizeOf(object.getFile())
+			double fileSizeMB = FileUtils.sizeOf(object.getFile()) * 1000 / 1024 / 1024;
+
+			String text = "Weitere Infos\n" + "Dateigröße: " + Math.round(fileSizeMB) / 1000 + "MB"
 					+ "\nErstellungsdatum: " + formatter.format(date);
 
 			InfoOverlay infoImage = new InfoOverlay(imageView, text);
