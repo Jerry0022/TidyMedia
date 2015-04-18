@@ -2,6 +2,8 @@ package application.gui;
 
 import java.io.IOException;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -15,14 +17,18 @@ import application.Main;
 import application.basicfeatures.FileObject;
 import application.logic.ContentManager;
 
-public class InputView extends VBox
+public class InputView extends VBox implements ChangeListener<FileObject>
 {
+	private Button	continueButton;
+
 	public InputView()
 	{
+		ContentManager.getInstance().file.addListener(this);
+
 		TextField locationTextField = new TextField();
 		TextField personTextField = new TextField();
 
-		Button continueButton = new Button("Speichern und fortfahren");
+		continueButton = new Button("Speichern und fortfahren");
 		continueButton.setOnAction(new EventHandler<ActionEvent>()
 		{
 			@Override
@@ -35,8 +41,7 @@ public class InputView extends VBox
 						.create()
 						.setPath(ContentManager.getInstance().sortedPath)
 						.setFullName(
-								file.getFullNameWithoutExtension() + "_renamed"
-										+ file.getFullExtension());
+								file.getFullNameWithoutExtension() + "" + file.getFullExtension());
 
 				try
 				{
@@ -53,5 +58,12 @@ public class InputView extends VBox
 
 		this.getChildren().addAll(new Text("Ort"), locationTextField, new Text("Personen"),
 				personTextField, continueButton);
+	}
+
+	@Override
+	public void changed(ObservableValue<? extends FileObject> observable, FileObject oldValue,
+			FileObject newValue)
+	{
+		continueButton.setDisable(newValue.getFullPath().isEmpty());
 	}
 }

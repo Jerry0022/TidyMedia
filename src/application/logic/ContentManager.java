@@ -29,7 +29,7 @@ public class ContentManager
 		return INSTANCE;
 	}
 
-	private String						unsortedPath;
+	public String						unsortedPath;
 	public String						sortedPath;
 
 	public StringProperty				user;

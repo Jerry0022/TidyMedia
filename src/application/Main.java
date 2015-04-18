@@ -1,8 +1,11 @@
 package application;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import application.basicfeatures.SuperPane;
@@ -45,7 +48,19 @@ public class Main extends Application
 			primaryStage.setMinHeight(400);
 			primaryStage.show();
 
-			ContentManager.getInstance().nextFile(); // Read very first file.
+			Button startReadButton = new Button("Start reading from "
+					+ ContentManager.getInstance().unsortedPath);
+			startReadButton.setOnAction(new EventHandler<ActionEvent>()
+			{
+				@Override
+				public void handle(ActionEvent event)
+				{
+					ContentManager.getInstance().nextFile(); // Read very first
+																// file.
+					superPane.closeDialogue(startReadButton);
+				}
+			});
+			openDynamic(startReadButton);
 		}
 		catch (Exception e)
 		{

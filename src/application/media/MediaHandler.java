@@ -1,6 +1,7 @@
 package application.media;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -43,9 +44,10 @@ public class MediaHandler
 					"DE"));
 
 			double fileSizeMB = FileUtils.sizeOf(object.getFile()) * 1000 / 1024 / 1024;
+			DecimalFormat decimalFormatter = new DecimalFormat("#0.000");
 
-			String text = "Weitere Infos\n" + "Dateigröße: " + Math.round(fileSizeMB) / 1000 + "MB"
-					+ "\nErstellungsdatum: " + formatter.format(date);
+			String text = "Weitere Infos\n" + "Erstellungsdatum: " + formatter.format(date)
+					+ "\nDateigröße: " + decimalFormatter.format(fileSizeMB / 1000) + " MB";
 
 			InfoOverlay infoImage = new InfoOverlay(imageView, text);
 			infoImage.setShowOnHover(true);
