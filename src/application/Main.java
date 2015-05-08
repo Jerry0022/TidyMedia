@@ -1,75 +1,67 @@
 package application;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import application.basicfeatures.SuperPane;
-import application.config.ConSettingsManager;
 import application.gui.InputView;
 import application.gui.ShowView;
 import application.gui.TitleView;
 import application.logic.ContentManager;
+import de.mixedfx.config.SettingsManager;
+import de.mixedfx.superpane.SuperPane;
 
 public class Main extends Application
 {
 	private static Main	INSTANCE;
 
-	public static void openDynamic(Node dynamic)
+	public static void openDynamic(final Node dynamic)
 	{
-		INSTANCE.superPane.openDynamic(dynamic);
+		Main.INSTANCE.superPane.openDynamic(dynamic);
 	}
 
 	private SuperPane	superPane;
 
 	@Override
-	public void start(Stage primaryStage)
+	public void start(final Stage primaryStage)
 	{
-		INSTANCE = this;
+		Main.INSTANCE = this;
 		try
 		{
-			ConSettingsManager.init();
+			SettingsManager.init();
 
-			BorderPane root = new BorderPane();
+			final BorderPane root = new BorderPane();
 			root.setLeft(new InputView());
 			root.setTop(new TitleView());
 			root.setCenter(new ShowView());
 
 			this.superPane = new SuperPane(root);
-			Scene scene = new Scene(superPane, 600, 400);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			final Scene scene = new Scene(this.superPane, 600, 400);
+			scene.getStylesheets().add(this.getClass().getResource("application.css").toExternalForm());
 
 			primaryStage.setScene(scene);
 			primaryStage.setMinWidth(600);
 			primaryStage.setMinHeight(400);
 			primaryStage.show();
 
-			Button startReadButton = new Button("Start reading from "
-					+ ContentManager.getInstance().unsortedPath);
-			startReadButton.setOnAction(new EventHandler<ActionEvent>()
+			final Button startReadButton = new Button("Start reading from " + ContentManager.getInstance().unsortedPath);
+			startReadButton.setOnAction(event ->
 			{
-				@Override
-				public void handle(ActionEvent event)
-				{
-					ContentManager.getInstance().nextFile(); // Read very first
-																// file.
-					superPane.closeDialogue(startReadButton);
-				}
+				ContentManager.getInstance().nextFile(); // Read very first file.
+				Main.this.superPane.closeDialogue(startReadButton);
 			});
-			openDynamic(startReadButton);
+			Main.openDynamic(startReadButton);
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
-		launch(args);
+		Application.launch(args);
 	}
 }

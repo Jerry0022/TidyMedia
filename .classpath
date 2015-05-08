@@ -15,5 +15,10 @@
 	<classpathentry kind="lib" path="libs/controlsfx-8.20.8.jar"/>
 	<classpathentry kind="lib" path="libs/metadata-extractor-2.8.0.jar"/>
 	<classpathentry kind="lib" path="libs/xmpcore-5.1.2.jar"/>
+	<classpathentry kind="lib" path="libs/MixedFX-0.5.jar" sourcepath="libs/MixedFX-0.5-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TidyMedia/libs/MixedFX-0.5-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

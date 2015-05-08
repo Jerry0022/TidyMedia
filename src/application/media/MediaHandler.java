@@ -2,30 +2,39 @@ package application.media;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.InfoOverlay;
 
-import application.basicfeatures.FileObject;
-import application.basicfeatures.ImageHandler;
-
 import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
+import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+
+import de.mixedfx.file.FileObject;
+import de.mixedfx.file.ImageHandler;
 
 public class MediaHandler
 {
-	public static Pane getView(FileObject object)
+	public static Pane getView(final FileObject object)
 	{
-		Pane pane = new Pane();
+		final StackPane pane = new StackPane();
+		pane.setMinSize(0, 0);
+		pane.setAlignment(Pos.CENTER);
 		ImageView imageView;
 		MediaView mediaView;
 
@@ -35,39 +44,64 @@ public class MediaHandler
 			imageView.fitWidthProperty().bind(pane.widthProperty());
 			imageView.fitHeightProperty().bind(pane.heightProperty());
 
-			// Retrieve date from image
-			Metadata metadata = ImageMetadataReader.readMetadata(object.getFile());
-			ExifSubIFDDirectory directory = metadata
-					.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-			Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-			DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("de",
-					"DE"));
+			final ArrayList<String> infoLines = new ArrayList<>();
 
-			double fileSizeMB = FileUtils.sizeOf(object.getFile()) * 1000 / 1024 / 1024;
-			DecimalFormat decimalFormatter = new DecimalFormat("#0.000");
+			/*
+			 * Retrieve date from image
+			 */
+			final Metadata metadata = ImageMetadataReader.readMetadata(object.getFile());
+			final ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+			final Date date = directory.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL);
+			final DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("de", "DE"));
+			infoLines.add("Erstellungsdatum: " + formatter.format(date));
 
-			String text = "Weitere Infos\n" + "Erstellungsdatum: " + formatter.format(date)
-					+ "\nDateigröße: " + decimalFormatter.format(fileSizeMB / 1000) + " MB";
+			/*
+			 * Retrieve resolution from image
+			 */
+			String width = "";
+			String height = "";
+			for (final Directory dir : metadata.getDirectories())
+				for (final Tag tag : dir.getTags())
+					if (StringUtils.containsIgnoreCase(tag.getTagName(), "width"))
+						width = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
+					else if (StringUtils.containsIgnoreCase(tag.getTagName(), "height"))
+						height = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
 
-			InfoOverlay infoImage = new InfoOverlay(imageView, text);
+			if (width != "" || height != "")
+				infoLines.add("Auflösung: " + width + "x" + height);
+
+			/*
+			 * Retrieve size from image
+			 */
+			final double fileSizeMB = FileUtils.sizeOf(object.getFile()) * 1000 / 1024 / 1024;
+			final DecimalFormat decimalFormatter = new DecimalFormat("#0.000");
+			infoLines.add("Dateigröße: " + decimalFormatter.format(fileSizeMB / 1000) + " MB");
+
+			String text = "Weitere Infos\n";
+			for (final String line : infoLines)
+				text = text + line + "\n";
+
+			final InfoOverlay infoImage = new InfoOverlay(imageView, text);
 			infoImage.setShowOnHover(true);
 
 			pane.getChildren().add(infoImage);
 		}
-		catch (Exception ie)
+		catch (final Exception ie)
 		{
 			try
 			{
-				Media media = new Media(object.getFullPath());
+				final Media media = new Media(object.getFullPath());
 				mediaView = new MediaView(new MediaPlayer(media));
 				pane.getChildren().add(mediaView);
 			}
-			catch (Exception me)
+			catch (final Exception me)
 			{
 				// Image image = ImageHandler.readImage(data); // TODO Add here
 				// default image
 				// TODO Handle exception
-				imageView = new ImageView();
+				imageView = new ImageView(IconGetter.getFileIcon(object.getFullName()));
+				imageView.setFitHeight(64);
+				imageView.setFitWidth(64);
 				pane.getChildren().add(imageView);
 			}
 		}

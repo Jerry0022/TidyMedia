@@ -14,9 +14,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import application.basicfeatures.DataHandler;
-import application.basicfeatures.FileObject;
-import application.config.ConSettingsManager;
+import de.mixedfx.config.SettingsManager;
+import de.mixedfx.file.DataHandler;
+import de.mixedfx.file.FileObject;
 
 public class ContentManager
 {
@@ -24,9 +24,9 @@ public class ContentManager
 
 	public static ContentManager getInstance()
 	{
-		if (INSTANCE == null)
-			INSTANCE = new ContentManager();
-		return INSTANCE;
+		if (ContentManager.INSTANCE == null)
+			ContentManager.INSTANCE = new ContentManager();
+		return ContentManager.INSTANCE;
 	}
 
 	public String						unsortedPath;
@@ -38,13 +38,12 @@ public class ContentManager
 
 	private ContentManager()
 	{
-		unsortedPath = ConSettingsManager.getValue("Allgemein", "MedienPfad-Unsortiert",
-				"C:\\Users\\Public\\Pictures");
-		sortedPath = ConSettingsManager.getValue("Allgemein", "MedienPfad-Sortiert", "C:\\");
+		this.unsortedPath = SettingsManager.getValue("Allgemein", "MedienPfad-Unsortiert", "C:\\Users\\Public\\Pictures");
+		this.sortedPath = SettingsManager.getValue("Allgemein", "MedienPfad-Sortiert", "C:\\");
 
-		user = new SimpleStringProperty("Sample Pictures");
-		file = new SimpleObjectProperty<>(new FileObject());
-		filesCount = new SimpleIntegerProperty(0);
+		this.user = new SimpleStringProperty("Sample Pictures");
+		this.file = new SimpleObjectProperty<>(new FileObject());
+		this.filesCount = new SimpleIntegerProperty(0);
 	}
 
 	/**
@@ -52,16 +51,15 @@ public class ContentManager
 	 */
 	public void nextFile()
 	{
-		File path = new File(DataHandler.fuse(unsortedPath, user.get()));
-		Collection<File> files = FileUtils.listFiles(path, HiddenFileFilter.VISIBLE,
-				TrueFileFilter.TRUE);
+		final File path = new File(DataHandler.fuse(this.unsortedPath, this.user.get()));
+		final Collection<File> files = FileUtils.listFiles(path, HiddenFileFilter.VISIBLE, TrueFileFilter.TRUE);
 		// TODO Handle expception if path is not a valid path
 
-		filesCount.set(files.size());
+		this.filesCount.set(files.size());
 
 		if (files.size() != 0)
-			file.set(new FileObject((File) files.toArray()[0]));
+			this.file.set(new FileObject((File) files.toArray()[0]));
 		else
-			file.set(new FileObject());
+			this.file.set(new FileObject());
 	}
 }

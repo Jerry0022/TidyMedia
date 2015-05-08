@@ -7,6 +7,9 @@ import java.math.BigInteger;
 
 import org.apache.commons.io.FileUtils;
 
+import de.mixedfx.file.DataHandler;
+import de.mixedfx.file.FileObject;
+
 public class ConManager
 {
 	public static final String	myDir	= "assets";
@@ -18,12 +21,19 @@ public class ConManager
 	 * @param toWrite
 	 * @return Returns the file or null if it could not create a file.
 	 */
-	public static File writeFile(FileObject data)
+	public static File writeFile(final FileObject data)
 	{
-		return DataHandler.createOrFindFile(data.getFullPath());
+		try
+		{
+			return DataHandler.createOrFindFile(data);
+		}
+		catch (IOException | InterruptedException e)
+		{
+			return null;
+		}
 	}
 
-	public static File createFolder(FileObject folder) throws IOException
+	public static File createFolder(final FileObject folder) throws IOException
 	{
 		FileUtils.forceMkdir(folder.getFile());
 		return folder.getFile();
@@ -34,21 +44,20 @@ public class ConManager
 	 * @param name
 	 * @return
 	 * @throws FileNotFoundException
-	 *             Throws an exception because it doesn't know if it should
-	 *             return an image or ...
+	 *             Throws an exception because it doesn't know if it should return an image or ...
 	 */
-	public static File readFile(FileObject data) throws FileNotFoundException
+	public static File readFile(final FileObject data) throws FileNotFoundException
 	{
-		return DataHandler.getFile(data.getPath(), data.getFullName());
+		return DataHandler.readFile(data);
 	}
 
-	public static boolean isEqual(FileObject f1, FileObject f2)
+	public static boolean isEqual(final FileObject f1, final FileObject f2)
 	{
-		return DataHandler.isEqual(f1.getFullPath(), f2.getFullPath());
+		return f1.equals(f2);
 	}
 
-	public static BigInteger getSize(FileObject fullPath) throws FileNotFoundException
+	public static BigInteger getSize(final FileObject fullPath) throws FileNotFoundException
 	{
-		return DataHandler.getSize(readFile(fullPath));
+		return FileUtils.sizeOfAsBigInteger(ConManager.readFile(fullPath));
 	}
 }
