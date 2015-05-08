@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="TidyMedia.jnlp">
+  <information>
+    <title>TidyMedia</title>
+    <vendor>Jerry0022</vendor>
+    <description>Sample JavaFX 2.0 application.</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <jfx:javafx-runtime version="8.0+" href="http://javadl.sun.com/webapps/download/GetFile/javafx-latest/windows-i586/javafx2.jnlp"/>
+  </resources>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="TidyMedia.jar" size="11712" download="eager" />
+    <jar href="libs/MixedFX-0.5.jar" size="32824" download="eager" />
+    <jar href="libs/commons-beanutils-1.9.2.jar" size="233857" download="eager" />
+    <jar href="libs/commons-configuration2-2.0-alpha1.jar" size="594767" download="eager" />
+    <jar href="libs/commons-io-2.4.jar" size="185140" download="eager" />
+    <jar href="libs/commons-lang3-3.3.2.jar" size="412740" download="eager" />
+    <jar href="libs/commons-logging-1.2.jar" size="61829" download="eager" />
+    <jar href="libs/controlsfx-8.20.8.jar" size="957666" download="eager" />
+    <jar href="libs/jna-4.1.0.jar" size="914597" download="eager" />
+    <jar href="libs/jna-platform-4.1.0.jar" size="1464423" download="eager" />
+    <jar href="libs/metadata-extractor-2.8.0.jar" size="259801" download="eager" />
+    <jar href="libs/xmpcore-5.1.2.jar" size="117333" download="eager" />
+  </resources>
+  <applet-desc  width="0" height="0" main-class="com.javafx.main.NoJavaFXFallback"  name="TidyMedia" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="0" height="0" main-class="application.Main"  name="TidyMedia" />
+  <update check="background"/>
+</jnlp>
