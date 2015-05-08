@@ -28,6 +28,8 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.file.ImageHandler;
 
+// Implement:
+// https://github.com/drewnoakes/metadata-extractor/blob/master/Samples/com/drew/metadata/GeoTagMapBuilder.java
 public class MediaHandler
 {
 	public static Pane getView(final FileObject object)
@@ -94,9 +96,6 @@ public class MediaHandler
 			}
 			catch (final Exception me)
 			{
-				// Image image = ImageHandler.readImage(data); // TODO Add here
-				// default image
-				// TODO Handle exception
 				final ImageView imageView = new ImageView(IconGetter.getFileIcon(object.getFullName()));
 				imageView.setFitHeight(64);
 				imageView.setFitWidth(64);
