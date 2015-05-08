@@ -22,7 +22,7 @@ public class ShowView extends BorderPane implements ChangeListener<FileObject>
 		this.setTop(new Text(newValue.getFullName()));
 
 		if (newValue.getFullPath().isEmpty())
-			this.setCenter(new Text("No files found! Please add file and restart!"));
+			this.setCenter(new Text("Alle Dateien verarbeitet! Bitte füge ein Bild hinzu und starte dieses Programm neu!"));
 		else
 			this.setCenter(MediaHandler.getView(newValue));
 	}

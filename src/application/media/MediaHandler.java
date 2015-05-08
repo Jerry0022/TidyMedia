@@ -35,12 +35,10 @@ public class MediaHandler
 		final StackPane pane = new StackPane();
 		pane.setMinSize(0, 0);
 		pane.setAlignment(Pos.CENTER);
-		ImageView imageView;
-		MediaView mediaView;
 
 		try
 		{
-			imageView = new ImageView(ImageHandler.readImage(object));
+			final ImageView imageView = new ImageView(ImageHandler.readImage(object));
 			imageView.fitWidthProperty().bind(pane.widthProperty());
 			imageView.fitHeightProperty().bind(pane.heightProperty());
 
@@ -91,7 +89,7 @@ public class MediaHandler
 			try
 			{
 				final Media media = new Media(object.getFullPath());
-				mediaView = new MediaView(new MediaPlayer(media));
+				final MediaView mediaView = new MediaView(new MediaPlayer(media));
 				pane.getChildren().add(mediaView);
 			}
 			catch (final Exception me)
@@ -99,7 +97,7 @@ public class MediaHandler
 				// Image image = ImageHandler.readImage(data); // TODO Add here
 				// default image
 				// TODO Handle exception
-				imageView = new ImageView(IconGetter.getFileIcon(object.getFullName()));
+				final ImageView imageView = new ImageView(IconGetter.getFileIcon(object.getFullName()));
 				imageView.setFitHeight(64);
 				imageView.setFitWidth(64);
 				pane.getChildren().add(imageView);

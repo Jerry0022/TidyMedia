@@ -1,5 +1,6 @@
 package application.gui;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.beans.value.ChangeListener;
@@ -9,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 
 import application.Main;
@@ -18,6 +20,7 @@ import de.mixedfx.file.FileObject;
 public class InputView extends VBox implements ChangeListener<FileObject>
 {
 	private final Button	continueButton;
+	private final Button	removalButton;
 
 	public InputView()
 	{
@@ -25,6 +28,31 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 
 		final TextField locationTextField = new TextField();
 		final TextField personTextField = new TextField();
+
+		this.removalButton = new Button("Löschen und fortfahren");
+		this.removalButton.setOnAction(event ->
+		{
+			final FileObject file = ContentManager.getInstance().file.get();
+
+			try
+			{
+				final com.sun.jna.platform.FileUtils fileUtils = com.sun.jna.platform.FileUtils.getInstance();
+				if (fileUtils.hasTrash())
+					fileUtils.moveToTrash(new File[] { file.getFile() });
+				else
+					Main.openDynamic(new Text("No Trash available"));
+			}
+			catch (final IOException e)
+			{
+				final Text errorText = new Text();
+				if (e instanceof FileExistsException)
+					errorText.setText("Datei kann nicht verschoben werden, da die sie im Zielordner schon existiert!");
+				else
+					errorText.setText("Source or destination aren't valid or access rights to the file are restricted!");
+				Main.openDynamic(errorText);
+			}
+			ContentManager.getInstance().nextFile();
+		});
 
 		this.continueButton = new Button("Speichern und fortfahren");
 		this.continueButton.setOnAction(event ->
@@ -40,12 +68,17 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 			}
 			catch (final IOException e)
 			{
-				Main.openDynamic(new Text("Source or destination aren't valid or access rights to the file are restricted!"));
+				final Text errorText = new Text();
+				if (e instanceof FileExistsException)
+					errorText.setText("Datei kann nicht verschoben werden, da die sie im Zielordner schon existiert!");
+				else
+					errorText.setText("Source or destination aren't valid or access rights to the file are restricted!");
+				Main.openDynamic(errorText);
 			}
 			ContentManager.getInstance().nextFile();
 		});
 
-		this.getChildren().addAll(new Text("Ort"), locationTextField, new Text("Personen"), personTextField, this.continueButton);
+		this.getChildren().addAll(new Text("Ort"), locationTextField, new Text("Personen"), personTextField, this.continueButton, this.removalButton);
 	}
 
 	@Override

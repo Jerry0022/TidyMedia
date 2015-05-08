@@ -20,5 +20,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/TidyMedia/libs/MixedFX-0.5-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/jna-4.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
