@@ -1,6 +1,7 @@
 package application;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -36,21 +37,25 @@ public class Main extends Application
 			root.setLeft(new InputView());
 			root.setTop(new TitleView());
 			root.setCenter(new ShowView());
+			root.setMinSize(600, 400);
 
 			this.superPane = new SuperPane(root);
 			final Scene scene = new Scene(this.superPane, 600, 400);
 			scene.getStylesheets().add(this.getClass().getResource("application.css").toExternalForm());
 
 			primaryStage.setScene(scene);
-			primaryStage.setMinWidth(600);
-			primaryStage.setMinHeight(400);
+			primaryStage.minHeightProperty().bind(Bindings.max(0, primaryStage.heightProperty().subtract(scene.heightProperty()).add(root.minHeightProperty())));
+			primaryStage.minWidthProperty().bind(Bindings.max(0, primaryStage.widthProperty().subtract(scene.widthProperty()).add(root.minWidthProperty())));
 			primaryStage.show();
 
 			final Button startReadButton = new Button("Start reading from " + ContentManager.getInstance().unsortedPath);
 			startReadButton.setOnAction(event ->
 			{
-				ContentManager.getInstance().nextFile(); // Read very first file.
-				Main.this.superPane.closeDialogue(startReadButton);
+				if (ContentManager.getInstance().validateConfig())
+				{
+					ContentManager.getInstance().nextFile(); // Read very first file.
+					Main.this.superPane.closeDialogue(startReadButton);
+				}
 			});
 			Main.openDynamic(startReadButton);
 		}

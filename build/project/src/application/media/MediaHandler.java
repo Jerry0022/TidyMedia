@@ -26,8 +26,10 @@ import com.drew.metadata.exif.ExifDirectoryBase;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 import de.mixedfx.file.FileObject;
-import de.mixedfx.file.ImageHandler;
+import de.mixedfx.image.ImageHandler;
 
+// Implement:
+// https://github.com/drewnoakes/metadata-extractor/blob/master/Samples/com/drew/metadata/GeoTagMapBuilder.java
 public class MediaHandler
 {
 	public static Pane getView(final FileObject object)
@@ -47,7 +49,7 @@ public class MediaHandler
 			/*
 			 * Retrieve date from image
 			 */
-			final Metadata metadata = ImageMetadataReader.readMetadata(object.getFile());
+			final Metadata metadata = ImageMetadataReader.readMetadata(object.toFile());
 			final ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
 			final Date date = directory.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL);
 			final DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("de", "DE"));
@@ -62,8 +64,9 @@ public class MediaHandler
 				for (final Tag tag : dir.getTags())
 					if (StringUtils.containsIgnoreCase(tag.getTagName(), "width"))
 						width = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
-					else if (StringUtils.containsIgnoreCase(tag.getTagName(), "height"))
-						height = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
+					else
+						if (StringUtils.containsIgnoreCase(tag.getTagName(), "height"))
+							height = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
 
 			if (width != "" || height != "")
 				infoLines.add("Auflösung: " + width + "x" + height);
@@ -71,7 +74,7 @@ public class MediaHandler
 			/*
 			 * Retrieve size from image
 			 */
-			final double fileSizeMB = FileUtils.sizeOf(object.getFile()) * 1000 / 1024 / 1024;
+			final double fileSizeMB = FileUtils.sizeOf(object.toFile()) * 1000 / 1024 / 1024;
 			final DecimalFormat decimalFormatter = new DecimalFormat("#0.000");
 			infoLines.add("Dateigröße: " + decimalFormatter.format(fileSizeMB / 1000) + " MB");
 
@@ -94,9 +97,6 @@ public class MediaHandler
 			}
 			catch (final Exception me)
 			{
-				// Image image = ImageHandler.readImage(data); // TODO Add here
-				// default image
-				// TODO Handle exception
 				final ImageView imageView = new ImageView(IconGetter.getFileIcon(object.getFullName()));
 				imageView.setFitHeight(64);
 				imageView.setFitWidth(64);

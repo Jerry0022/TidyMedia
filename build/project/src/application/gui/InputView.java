@@ -38,7 +38,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 			{
 				final com.sun.jna.platform.FileUtils fileUtils = com.sun.jna.platform.FileUtils.getInstance();
 				if (fileUtils.hasTrash())
-					fileUtils.moveToTrash(new File[] { file.getFile() });
+					fileUtils.moveToTrash(new File[] { file.toFile() });
 				else
 					Main.openDynamic(new Text("No Trash available"));
 			}
@@ -64,7 +64,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 
 			try
 			{
-				FileUtils.moveFile(file.getFile(), newFile.getFile());
+				FileUtils.moveFile(file.toFile(), newFile.toFile());
 			}
 			catch (final IOException e)
 			{

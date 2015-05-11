@@ -21,11 +21,6 @@
 	
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
-				<filename name="commons-lang3-3.3.2.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
 				<filename name="metadata-extractor-2.8.0.jar"/>
 			</fileset>
 		</copy>
@@ -36,7 +31,7 @@
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
-				<filename name="MixedFX-0.5.jar"/>
+				<filename name="jfxtras-common-8.0-r3.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -51,12 +46,62 @@
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
-				<filename name="xmpcore-5.1.2.jar"/>
+				<filename name="slf4j-api-1.7.12.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="jfxtras-labs-8.0-r3.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="slf4j-simple-1.7.12.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="jfxtras-controls-8.0-r3.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
 				<filename name="jna-4.1.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="log4j-core-2.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="commons-lang3-3.3.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="MixedFX-0.6.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="eventbus-1.4.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="xmpcore-5.1.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="jfxtras-fxml-8.0-r3.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\Jerry\Google Drive\dev\workspace\git\tidymedia\libs">
+				<filename name="log4j-api-2.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -94,16 +139,25 @@
 		<copy todir="build/libs">
 			<fileset dir="externalLibs">
 				<include name="xmpcore-5.1.2.jar"/>
-				<include name="commons-configuration2-2.0-alpha1.jar"/>
+				<include name="jfxtras-fxml-8.0-r3.jar"/>
 				<include name="controlsfx-8.20.8.jar"/>
 				<include name="commons-lang3-3.3.2.jar"/>
-				<include name="jna-4.1.0.jar"/>
+				<include name="log4j-api-2.2.jar"/>
+				<include name="commons-logging-1.2.jar"/>
+				<include name="log4j-core-2.2.jar"/>
+				<include name="metadata-extractor-2.8.0.jar"/>
+				<include name="commons-configuration2-2.0-alpha1.jar"/>
+				<include name="MixedFX-0.6.jar"/>
+				<include name="eventbus-1.4.jar"/>
+				<include name="jfxtras-common-8.0-r3.jar"/>
+				<include name="jfxtras-labs-8.0-r3.jar"/>
+				<include name="slf4j-api-1.7.12.jar"/>
+				<include name="slf4j-simple-1.7.12.jar"/>
 				<include name="commons-io-2.4.jar"/>
+				<include name="jna-4.1.0.jar"/>
 				<include name="commons-beanutils-1.9.2.jar"/>
 				<include name="jna-platform-4.1.0.jar"/>
-				<include name="MixedFX-0.5.jar"/>
-				<include name="commons-logging-1.2.jar"/>
-				<include name="metadata-extractor-2.8.0.jar"/>
+				<include name="jfxtras-controls-8.0-r3.jar"/>
 			</fileset>
 		</copy>
 	
@@ -171,7 +225,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Jerry0022"/>
 				<attribute name="Implementation-Title" value="TidyMedia"/>
-				<attribute name="Implementation-Version" value="0.1"/>
+				<attribute name="Implementation-Version" value="0.2"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
