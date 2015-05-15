@@ -2,6 +2,7 @@ package application.gui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import application.logic.ContentManager;
@@ -12,7 +13,7 @@ public class ShowView extends BorderPane implements ChangeListener<FileObject>
 {
 	public ShowView()
 	{
-		this.setStyle("-fx-background-color: yellow");
+		this.setPadding(new Insets(0, 0, 0, 20));
 		ContentManager.getInstance().file.addListener(this);
 	}
 

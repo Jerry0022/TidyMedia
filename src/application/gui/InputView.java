@@ -5,8 +5,11 @@ import java.io.IOException;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -25,11 +28,27 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 	public InputView()
 	{
 		ContentManager.getInstance().file.addListener(this);
+		this.setSpacing(10);
 
+		final VBox locationBox = new VBox();
+		final Label locationText = new Label("Ort");
+		locationText.setId("inputField");
 		final TextField locationTextField = new TextField();
-		final TextField personTextField = new TextField();
+		locationBox.getChildren().addAll(locationText, locationTextField);
 
-		this.removalButton = new Button("Löschen und fortfahren");
+		final VBox personsBox = new VBox();
+		final Label personsText = new Label("Photograph, Personen|Organisationen");
+		personsText.setId("inputField");
+		final TextField personTextField = new TextField();
+		personsBox.getChildren().addAll(personsText, personTextField);
+
+		final VBox tagBox = new VBox();
+		final Label tagText = new Label("Tag (optional)");
+		tagText.setId("inputField");
+		final TextField tagTextfield = new TextField();
+		tagBox.getChildren().addAll(tagText, tagTextfield);
+
+		this.removalButton = new Button("Löschen");
 		this.removalButton.setOnAction(event ->
 		{
 			final FileObject file = ContentManager.getInstance().file.get();
@@ -54,17 +73,28 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 			ContentManager.getInstance().nextFile();
 		});
 
-		this.continueButton = new Button("Speichern und fortfahren");
+		this.continueButton = new Button("Speichern");
 		this.continueButton.setOnAction(event ->
 		{
 			final FileObject file = ContentManager.getInstance().file.get();
 
 			// TODO Apply naming logic here!
-			final FileObject newFile = FileObject.create().setPath(ContentManager.getInstance().sortedPath).setFullName(file.getFullNameWithoutExtension() + "" + file.getFullExtension());
+
+			final FileObject newFile = FileObject.create().setPath(ContentManager.getInstance().sortedPath).setFullName(locationTextField.getText().concat(" - ").concat(personTextField.getText()).concat(file.getFullExtension()));
 
 			try
 			{
-				FileUtils.moveFile(file.toFile(), newFile.toFile());
+				int i = 1;
+				FileObject clone = newFile.clone();
+				while (clone.toFile().exists())
+				{
+					clone = newFile.clone();
+					clone.setName(newFile.getName().concat("_"));
+					clone.setName(clone.getName().concat(String.valueOf(i++)));
+					System.out.println(clone);
+				}
+
+				FileUtils.moveFile(file.toFile(), clone.toFile());
 			}
 			catch (final IOException e)
 			{
@@ -78,7 +108,12 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 			ContentManager.getInstance().nextFile();
 		});
 
-		this.getChildren().addAll(new Text("Ort"), locationTextField, new Text("Personen"), personTextField, this.continueButton, this.removalButton);
+		final HBox buttons = new HBox();
+		buttons.getChildren().addAll(this.continueButton, this.removalButton);
+		buttons.setSpacing(10);
+		buttons.setAlignment(Pos.CENTER);
+
+		this.getChildren().addAll(locationBox, personsBox, tagBox, buttons);
 	}
 
 	@Override

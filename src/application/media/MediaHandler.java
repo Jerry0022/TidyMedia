@@ -8,6 +8,11 @@ import java.util.Locale;
 
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
@@ -27,6 +32,7 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 import de.mixedfx.file.FileObject;
 import de.mixedfx.image.ImageHandler;
+import de.mixedfx.inspector.Inspector;
 
 // Implement:
 // https://github.com/drewnoakes/metadata-extractor/blob/master/Samples/com/drew/metadata/GeoTagMapBuilder.java
@@ -37,12 +43,16 @@ public class MediaHandler
 		final StackPane pane = new StackPane();
 		pane.setMinSize(0, 0);
 		pane.setAlignment(Pos.CENTER);
+		Inspector.inspectSize(pane);
 
 		try
 		{
-			final ImageView imageView = new ImageView(ImageHandler.readImage(object));
-			imageView.fitWidthProperty().bind(pane.widthProperty());
-			imageView.fitHeightProperty().bind(pane.heightProperty());
+			final Pane imageView = new Pane();
+			imageView.prefWidthProperty().bind(pane.widthProperty());
+			imageView.prefHeightProperty().bind(pane.heightProperty());
+			final BackgroundSize size = new BackgroundSize(100, 100, true, true, true, false);
+			final BackgroundImage image = new BackgroundImage(ImageHandler.readImage(object), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, size);
+			imageView.setBackground(new Background(image));
 
 			final ArrayList<String> infoLines = new ArrayList<>();
 
