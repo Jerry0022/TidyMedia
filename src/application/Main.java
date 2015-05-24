@@ -21,7 +21,7 @@ import de.mixedfx.config.ConfigHandler;
 import de.mixedfx.config.SettingsManager;
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
-import de.mixedfx.superpane.SuperPane;
+import de.mixedfx.gui.panes.SuperPane;
 
 public class Main extends Application
 {

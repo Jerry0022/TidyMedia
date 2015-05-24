@@ -32,7 +32,6 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 import de.mixedfx.file.FileObject;
 import de.mixedfx.image.ImageHandler;
-import de.mixedfx.inspector.Inspector;
 
 // Implement:
 // https://github.com/drewnoakes/metadata-extractor/blob/master/Samples/com/drew/metadata/GeoTagMapBuilder.java
@@ -43,7 +42,6 @@ public class MediaHandler
 		final StackPane pane = new StackPane();
 		pane.setMinSize(0, 0);
 		pane.setAlignment(Pos.CENTER);
-		Inspector.inspectSize(pane);
 
 		try
 		{
@@ -74,9 +72,8 @@ public class MediaHandler
 				for (final Tag tag : dir.getTags())
 					if (StringUtils.containsIgnoreCase(tag.getTagName(), "width"))
 						width = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
-					else
-						if (StringUtils.containsIgnoreCase(tag.getTagName(), "height"))
-							height = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
+					else if (StringUtils.containsIgnoreCase(tag.getTagName(), "height"))
+						height = StringUtils.replacePattern(tag.getDescription(), "[^0123456789\\.,]", "");
 
 			if (width != "" || height != "")
 				infoLines.add("Auflösung: " + width + "x" + height);
