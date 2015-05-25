@@ -11,6 +11,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
@@ -27,6 +29,9 @@ import jfxtras.scene.control.CalendarTextField;
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+import org.controlsfx.validation.decoration.GraphicValidationDecoration;
 
 import application.Main;
 import application.logic.ContentManager;
@@ -34,6 +39,7 @@ import de.mixedfx.file.FileObject;
 
 public class InputView extends VBox implements ChangeListener<FileObject>
 {
+	private final BooleanProperty	textFieldsEmpty;
 	private final Button			continueButton;
 	private final Button			removalButton;
 
@@ -42,8 +48,12 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 
 	public InputView()
 	{
+		this.textFieldsEmpty = new SimpleBooleanProperty();
 		ContentManager.getInstance().file.addListener(this);
 		this.setSpacing(10);
+
+		ValidationSupport validator = new ValidationSupport();
+		validator.setValidationDecorator(new GraphicValidationDecoration());
 
 		final TextField locationTextField = new TextField();
 		HBox.setHgrow(locationTextField, Priority.ALWAYS);
@@ -65,6 +75,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 				}
 			}
 		});
+		validator.registerValidator(locationTextField, true, Validator.createEmptyValidator("Ort muss ausgefüllt werden!"));
 		HBox locationCombination = new HBox(locationTextField, countryTextField);
 		InputElement locationBox = new InputElement("Ort und Land", locationCombination);
 		TextFields.bindAutoCompletion(countryTextField, countryCodes);
@@ -73,6 +84,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 		final Label personsText = new Label("Photograph, Personen|Organisationen");
 		personsText.setId("inputField");
 		final TextField personTextField = new TextField();
+		validator.registerValidator(personTextField, true, Validator.createEmptyValidator("Photograph, Personen|Organisationen müssen ausgefüllt werden!"));
 		personsBox.getChildren().addAll(personsText, personTextField);
 
 		VBox dateBox = new VBox();
@@ -107,6 +119,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 		InputElement tagBox = new InputElement("Tag (optional)", tagTextfield);
 
 		this.removalButton = new Button("Löschen");
+		this.removalButton.setDisable(true);
 		this.removalButton.setOnAction(event ->
 		{
 			final FileObject file = ContentManager.getInstance().file.get();
@@ -132,6 +145,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 		});
 
 		this.continueButton = new Button("Speichern");
+		this.continueButton.setDisable(true);
 		this.continueButton.setOnAction(event ->
 		{
 			final FileObject file = ContentManager.getInstance().file.get();
@@ -165,6 +179,17 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 			ContentManager.getInstance().nextFile();
 		});
 
+		this.textFieldsEmpty.bind(locationTextField.textProperty().isEqualTo("").or(personTextField.textProperty().isEqualTo("")));
+		this.textFieldsEmpty.addListener(new ChangeListener<Boolean>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+			{
+				removalButton.setDisable(newValue);
+				continueButton.setDisable(newValue);
+			}
+		});
+
 		final HBox buttons = new HBox();
 		buttons.getChildren().addAll(this.continueButton, this.removalButton);
 		buttons.setSpacing(10);
@@ -192,7 +217,10 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 		}
 
 		// Disable buttons if there is no content available
-		this.removalButton.setDisable(newValue.getFullPath().isEmpty());
-		this.continueButton.setDisable(newValue.getFullPath().isEmpty());
+		if (newValue.getFullPath().isEmpty())
+		{
+			this.removalButton.setDisable(true);
+			this.continueButton.setDisable(true);
+		}
 	}
 }
