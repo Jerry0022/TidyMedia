@@ -69,8 +69,7 @@ public class MediaHandler
 			 * Retrieve date from image
 			 */
 			final Metadata metadata = ImageMetadataReader.readMetadata(object.toFile());
-			final ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-			final Date date = directory.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL);
+			final Date date = getDate(object);
 			final DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("de", "DE"));
 			infoLines.add("Erstellungsdatum: " + formatter.format(date));
 

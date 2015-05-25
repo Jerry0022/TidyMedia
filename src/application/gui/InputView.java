@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,9 +58,23 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 
 		final TextField locationTextField = new TextField();
 		HBox.setHgrow(locationTextField, Priority.ALWAYS);
-		String[] countryCodes = Locale.getISOCountries();
+		ArrayList<String> countries = new ArrayList<>();
+		for (String isoCode : Locale.getISOCountries())
+		{
+			Locale locale = new Locale("", isoCode);
+			countries.add(isoCode + " (" + locale.getDisplayCountry(locale) + ")");
+		}
 		TextField countryTextField = new TextField("DE");
 		countryTextField.setMaxWidth(30);
+		countryTextField.textProperty().addListener(new ChangeListener<String>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+			{
+				if (newValue.length() > 2)
+					countryTextField.setText(newValue.substring(0, 2));
+			}
+		});
 		countryTextField.focusedProperty().addListener(new ChangeListener<Boolean>()
 		{
 			@Override
@@ -69,8 +82,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 			{
 				if (!countryTextField.getText().isEmpty())
 				{
-					List<String> list = Arrays.asList(countryCodes);
-					if (!list.contains(countryTextField.getText().toUpperCase()))
+					if (!countries.contains(countryTextField.getText().toUpperCase()))
 						countryTextField.setText("DE");
 					else if (!newValue)
 						countryTextField.setText(countryTextField.getText().toUpperCase());
@@ -80,7 +92,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 		validator.registerValidator(locationTextField, true, Validator.createEmptyValidator("Ort muss ausgefüllt werden!"));
 		HBox locationCombination = new HBox(locationTextField, countryTextField);
 		InputElement locationBox = new InputElement("Ort und Land", locationCombination);
-		TextFields.bindAutoCompletion(countryTextField, countryCodes);
+		TextFields.bindAutoCompletion(countryTextField, countries.toArray());
 
 		final VBox personsBox = new VBox();
 		final Label personsText = new Label("Photograph, Personen|Organisationen");
