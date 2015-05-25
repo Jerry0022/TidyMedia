@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -35,6 +36,7 @@ import org.controlsfx.validation.decoration.GraphicValidationDecoration;
 
 import application.Main;
 import application.logic.ContentManager;
+import application.media.MediaHandler;
 import de.mixedfx.file.FileObject;
 
 public class InputView extends VBox implements ChangeListener<FileObject>
@@ -69,7 +71,7 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 				{
 					List<String> list = Arrays.asList(countryCodes);
 					if (!list.contains(countryTextField.getText().toUpperCase()))
-						countryTextField.setText("");
+						countryTextField.setText("DE");
 					else if (!newValue)
 						countryTextField.setText(countryTextField.getText().toUpperCase());
 				}
@@ -95,14 +97,6 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 		dateTextField.setAllowNull(false);
 		dateTextField.setDateFormat(dateConverter);
 		// TODO Set prompt not transparent
-		dateTextField.textProperty().addListener(new ChangeListener<String>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-			{
-				System.out.println("Date was filled in: " + newValue);
-			}
-		});
 		dateTextField.setParseErrorCallback(new Callback<Throwable, Void>()
 		{
 			@Override
@@ -148,10 +142,16 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 		this.continueButton.setDisable(true);
 		this.continueButton.setOnAction(event ->
 		{
+			// Remove leading and trailing whitespaces
+			locationTextField.setText(locationTextField.getText().trim());
+			personTextField.setText(personTextField.getText().trim());
+			tagTextfield.setText(tagTextfield.getText().trim());
+
+			// Get current file
 			final FileObject file = ContentManager.getInstance().file.get();
 
 			// Apply naming logic here!
-			final FileObject newFile = FileObject.create().setPath(ContentManager.getInstance().sortedPath).setFullName(locationTextField.getText().concat(" - ").concat(personTextField.getText()).concat(file.getFullExtension()));
+			final FileObject newFile = FileObject.create().setPath(ContentManager.getInstance().sortedPath).setFullName(locationTextField.getText().concat(" [").concat(countryTextField.getText()).concat("] ").concat(" - ").concat(tagTextfield.getText()).concat(" - ").concat(personTextField.getText()).concat("_").concat(dateTextField.getText()).concat(file.getFullExtension()));
 
 			try
 			{
@@ -165,7 +165,10 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 					System.out.println(clone);
 				}
 
-				FileUtils.moveFile(file.toFile(), clone.toFile());
+				if (clone.getFullPath().length() > 250)
+					Main.openDynamic(new Text("Pfadlänge zu lang (max. 250 Zeichen): " + clone.getFullPath()));
+				else
+					FileUtils.moveFile(file.toFile(), clone.toFile());
 			}
 			catch (final IOException e)
 			{
@@ -201,20 +204,39 @@ public class InputView extends VBox implements ChangeListener<FileObject>
 	@Override
 	public void changed(final ObservableValue<? extends FileObject> observable, final FileObject oldValue, final FileObject newValue)
 	{
-		Pattern p = Pattern.compile("([0-9]{8})");
-		Matcher m = p.matcher(newValue.getName());
-		if (m.find())
+		/*
+		 * Find out date of new file to prefill textfield
+		 */
+		GregorianCalendar cal = new GregorianCalendar();
+		Date date = new Date();
+		try
 		{
-			try
+			/*
+			 * Find date from image metadata!
+			 */
+			date = MediaHandler.getDate(newValue);
+		}
+		catch (Exception e1)
+		{
+			/*
+			 * Find date from image name!
+			 */
+			Pattern p = Pattern.compile("([0-9]{8})");
+			Matcher m = p.matcher(newValue.getName());
+			if (m.find())
 			{
-				Date date = dateConverter.parse(m.group(1));
-				// TODO No idea how to set date to textfield
-				System.out.println("Found date: " + date.toString());
-			}
-			catch (ParseException e)
-			{
+				try
+				{
+					date = dateConverter.parse(m.group(1));
+				}
+				catch (ParseException e)
+				{
+					date = new Date();
+				}
 			}
 		}
+		cal.setTime(date);
+		dateTextField.setCalendar(cal);
 
 		// Disable buttons if there is no content available
 		if (newValue.getFullPath().isEmpty())

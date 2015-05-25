@@ -37,6 +37,17 @@ import de.mixedfx.image.ImageHandler;
 // https://github.com/drewnoakes/metadata-extractor/blob/master/Samples/com/drew/metadata/GeoTagMapBuilder.java
 public class MediaHandler
 {
+	public static Date getDate(FileObject object) throws Exception
+	{
+		/*
+		 * Retrieve date from image
+		 */
+		final Metadata metadata = ImageMetadataReader.readMetadata(object.toFile());
+		final ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+		final Date date = directory.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL);
+		return date;
+	}
+
 	public static Pane getView(final FileObject object)
 	{
 		final StackPane pane = new StackPane();
