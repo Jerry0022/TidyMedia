@@ -101,6 +101,7 @@ public class MediaHandler
 
 			final InfoOverlay infoImage = new InfoOverlay(imageView, text);
 			infoImage.setShowOnHover(true);
+			infoImage.setFocusTraversable(false);
 
 			pane.getChildren().add(infoImage);
 		}

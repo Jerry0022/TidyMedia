@@ -12,6 +12,7 @@ public class TitleView extends HBox
 	{
 		this.text = new Text();
 		this.text.textProperty().set(" Fotos & Videos");
+		this.text.setId("title");
 
 		this.setAlignment(Pos.CENTER);
 		this.getChildren().add(this.text);
